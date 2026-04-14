@@ -10,4 +10,9 @@ export default clerkMiddleware((auth, request) => {
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  unstable_allowDynamic: [
+    "**/node_modules/@clerk/shared/dist/**",
+    "**/node_modules/@clerk/nextjs/dist/**",
+    "**/node_modules/@clerk/clerk-react/dist/**",
+  ],
 };
