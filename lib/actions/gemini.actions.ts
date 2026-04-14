@@ -36,6 +36,7 @@ async function askGemini(prompt: string) {
   // Option 1: Groq (Incredibly fast and has a free tier)
   if (useGroq) {
     
+
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
