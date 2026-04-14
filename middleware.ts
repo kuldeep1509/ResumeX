@@ -5,9 +5,9 @@ const isProtectedRoute = createRouteMatcher([
   "/my-resume/(.*)/edit",
 ]);
 
-export default clerkMiddleware(async (auth, request) => {
+export default clerkMiddleware((auth, request) => {
   if (isProtectedRoute(request)) {
-    await auth.protect();
+    auth().protect();
   }
 });
 
