@@ -50,6 +50,7 @@ const ResumeCard = ({
   const myResume = JSON.parse(resume);
   const [openAlert, setOpenAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const { toast } = useToast();
 
   const onDelete = async () => {
@@ -79,10 +80,15 @@ const ResumeCard = ({
   };
 
   return (
-    <div className="relative aspect-[1/1.2] flex flex-col hover:scale-105 transition-all">
+    <div 
+      className={`relative aspect-[1/1.2] flex flex-col transition-all ${
+        actionLoading || isLoading ? "opacity-60 pointer-events-none" : "hover:scale-105"
+      }`}
+    >
       <Link
         href={"/my-resume/" + myResume.resumeId + "/view"}
         className="flex-grow"
+        onClick={() => setActionLoading("card")}
       >
         <div
           className="bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 rounded-t-lg border-t-4 h-full"
@@ -96,38 +102,44 @@ const ResumeCard = ({
         </div>
       </Link>
 
-      <div className="border p-3 flex justify-between bg-white rounded-b-lg shadow-lg">
+      <div className="border p-3 flex items-center justify-between bg-white rounded-b-lg shadow-lg">
         <h2 className="text-sm font-medium text-slate-700 mr-4 block whitespace-nowrap overflow-hidden text-ellipsis">
           {myResume.title}
         </h2>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <MoreVertical className="h-4 w-4 cursor-pointer" color="#000" />
-          </DropdownMenuTrigger>
+        {actionLoading || isLoading ? (
+          <Loader2 className="h-5 w-5 animate-spin text-slate-500" />
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreVertical className="h-5 w-5 cursor-pointer text-slate-700" />
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() =>
-                router.push("/my-resume/" + myResume.resumeId + "/edit")
-              }
-            >
-              Edit
-            </DropdownMenuItem>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                onClick={() => {
+                  setActionLoading("edit");
+                  router.push("/my-resume/" + myResume.resumeId + "/edit");
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={() =>
-                router.push("/my-resume/" + myResume.resumeId + "/view")
-              }
-            >
-              View
-            </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setActionLoading("view");
+                  router.push("/my-resume/" + myResume.resumeId + "/view");
+                }}
+              >
+                View
+              </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => setOpenAlert(true)}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem onClick={() => setOpenAlert(true)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       <AlertDialog open={openAlert}>
